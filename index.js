@@ -9,6 +9,10 @@ app.get('/amit', function (req, res) {
     res.send('Hello, World!!!! test argo');
   })
 
+app.get('/gueta', function (req, res) {
+  res.send('another test of argo');
+})
+
 app.listen(3000, function () {
   console.log('App listening on port 3000!');
 })
