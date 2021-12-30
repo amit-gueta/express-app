@@ -22,4 +22,4 @@ jobs:
         sudo mv vcluster /usr/local/bin;
 
         # Delete the cluster
-        vcluster delete devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        vcluster delete preview-pr-${{ github.event.pull_request.number }} --namespace prs
