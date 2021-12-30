@@ -25,12 +25,12 @@ jobs:
       with:
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
-    - name: Setup Kube config
-      uses: azure/k8s-set-context@v1
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}
+    # - name: Setup Kube config
+    #   uses: azure/k8s-set-context@v1
+    #   with:
+    #     method: kubeconfig
+    #     kubeconfig: ${{ secrets.KUBE_CONFIG }}
     - name: Deploy preview
       run: |
         # Install vCluster
@@ -38,8 +38,8 @@ jobs:
         sudo mv vcluster /usr/local/bin;
 
         # Create a cluster
-        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
-        vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        vcluster create preview-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
+        vcluster connect preview-pr-${{ github.event.pull_request.number }} --namespace prs
         export KUBECONFIG=$PWD/kubeconfig.yaml
         sleep 5
         kubectl get ingresses
