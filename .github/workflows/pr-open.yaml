@@ -36,7 +36,7 @@ jobs:
         # Install vCluster
         curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
         sudo mv vcluster /usr/local/bin;
-
+        
         # Create a cluster
         vcluster create preview-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
         vcluster connect preview-pr-${{ github.event.pull_request.number }} --namespace prs
@@ -46,7 +46,7 @@ jobs:
 
         # Deploy
         cd preview_manifest
-        kubectl apply -f preview_manifest
+        kubectl apply -f preview_manifest/*.yaml
         kubectl rollout status deployment devops-toolkit
     - name: Test
       run: |
