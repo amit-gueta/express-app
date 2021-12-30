@@ -47,7 +47,8 @@ jobs:
         # Deploy
         cd preview_manifest
         ls
-        # kubectl apply -f preview_manifest/*.yaml
+        kubectl apply -f deployment.yaml
+        kubectl apply -f ingress.yaml
         # kubectl rollout status deployment devops-toolkit
     - name: Test
       run: |
