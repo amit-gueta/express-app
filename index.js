@@ -13,6 +13,10 @@ app.get('/gueta', function (req, res) {
   res.send('another test of argo!!!ffdfddf!!');
 })
 
+app.get('/amosGueta', function (req, res) {
+  res.send('new endpoint!');
+})
+
 app.listen(3000, function () {
   console.log('App listening on port 3000!');
 })
