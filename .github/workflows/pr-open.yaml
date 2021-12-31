@@ -73,11 +73,11 @@ jobs:
         sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' deployment.yaml
         sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' ingress.yaml
         cat deployment.yaml
-        # sleep 3
         # sed -i -e 's/\(image: \)\(.*\)/\1${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}/' deployment.yaml
         # cat deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f ingress.yaml
+        sleep 3
 
     - name: CURL Test
       uses: wei/curl@v1
