@@ -1,4 +1,4 @@
-name: pr
+name: pr-open
 on:
   pull_request:
     branches:
@@ -46,8 +46,13 @@ jobs:
 
         # Deploy
         cd preview_manifest
-        kubectl apply -f preview_manifest
-        kubectl rollout status deployment devops-toolkit
+        grep -rl 'express-server-preview' . | xargs sed -i '' 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g'
+        cat deployment.yaml
+        sed -i '' 's/\(image: \)\(.*\)/\1${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}/' deployment.yaml
+        cat deployment.yaml
+        kubectl apply -f deployment.yaml
+        kubectl apply -f ingress.yaml
+        # kubectl rollout status deployment devops-toolkit
     - name: Test
       run: |
         echo "I was to lazy to write tests"
