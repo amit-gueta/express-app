@@ -2,6 +2,12 @@ name: pr
 on:
   pull_request:
     types: [ closed ]
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: flask-cluster    # Add your cluster name here.
+  GKE_ZONE: europe-west2-a   # Add your cluster zone here.
+  
 jobs:
   build:
     runs-on: ubuntu-latest
