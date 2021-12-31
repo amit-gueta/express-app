@@ -79,7 +79,7 @@ jobs:
         kubectl apply -f deployment.yaml
         kubectl apply -f ingress.yaml
 
-    - name: curl Test
+    - name: CURL Test
       uses: wei/curl@v1
       with:
         args: -X GET express-server-preview-${{ github.event.pull_request.number }}.34.105.179.16.nip.io
