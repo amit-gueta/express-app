@@ -49,7 +49,7 @@ jobs:
     - name: Replace image in config
       uses: datamonsters/replace-action
       with:
-        files: preview_manifest/deployment.yaml
+        files: 'preview_manifest/deployment.yaml'
         replacements: '$IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}'
 
 
