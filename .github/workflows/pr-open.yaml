@@ -63,10 +63,10 @@ jobs:
         # Deploy
         cd preview_manifest
         # grep -rl 'express-server-preview' . | xargs sed -i '' 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g'
-        sed -i '' 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' deployment.yaml
+        sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' deployment.yaml
         cat deployment.yaml
-        sed -i '' 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' ingress.yaml
-        sed -i '' 's/\(image: \)\(.*\)/\1${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}/' deployment.yaml
+        sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' ingress.yaml
+        sed -i 's/\(image: \)\(.*\)/\1${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}/' deployment.yaml
         cat deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f ingress.yaml
