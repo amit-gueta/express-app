@@ -36,11 +36,14 @@ jobs:
     - name: Update manifests
       run: |
         sleep 1
-        cat manifests/deployment.yaml | sed -e "s@- ${{ secrets.DOCKERHUB_USERNAME }}/app:.*@- ${{ secrets.DOCKERHUB_USERNAME }}/app:${{ github.sha }}@g" | tee manifests/deployment.yaml
+        # cat manifests/deployment.yaml | sed -e "s@- ${{ secrets.DOCKERHUB_USERNAME }}/app:.*@- ${{ secrets.DOCKERHUB_USERNAME }}/app:${{ github.sha }}@g" | tee manifests/deployment.yaml
+        # sed -i -e 's/\(image:\).*/\1 guetaamit\/app:v7/g' manifests/deployment.yaml
+        sed -i -e 's/\(guetaamit\/app:\).*/guetaamit\/app:${{ github.sha }}/g'
         cat manifests/deployment.yaml
         git config --global user.email "${{ secrets.GH_ORG }}@express.com"
         git config --global user.name "${{ secrets.GH_ORG }}"
         git add .
+        git status
         git commit -m "Promoting express-server production ${{ github.sha }}"
     - name: Push prod
       uses: ad-m/github-push-action@master
