@@ -3,6 +3,12 @@ on:
   pull_request:
     branches:
     - main
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: flask-cluster    # Add your cluster name here.
+  GKE_ZONE: europe-west2-a   # Add your cluster zone here.
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,32 +31,41 @@ jobs:
       with:
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/devops-toolkit:pr-${{ github.event.pull_request.number }}
-    - name: Setup Kube config
-      uses: azure/k8s-set-context@v1
+          ${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}
+          
+    
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
       with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        credentials_json: '${{ secrets.GKE_SA_KEY }}'
+    
+        # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+
     - name: Deploy preview
       run: |
         # Install vCluster
+        ls
         curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
         sudo mv vcluster /usr/local/bin;
-
+        
         # Create a cluster
-        vcluster create devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
-        vcluster connect devops-toolkit-pr-${{ github.event.pull_request.number }} --namespace prs
+        vcluster create preview-pr-${{ github.event.pull_request.number }} --namespace prs --expose 
+        vcluster connect preview-pr-${{ github.event.pull_request.number }} --namespace prs
         export KUBECONFIG=$PWD/kubeconfig.yaml
         sleep 5
         kubectl get ingresses
 
         # Deploy
         cd preview_manifest
-        kubectl apply -f preview_manifest
-        kubectl rollout status deployment devops-toolkit
+        ls
+        kubectl apply -f deployment.yaml
+        kubectl apply -f ingress.yaml
+        # kubectl rollout status deployment devops-toolkit
     - name: Test
       run: |
         echo "I was to lazy to write tests"
-    - name: Test2
-      run: |
-        sleep 50
