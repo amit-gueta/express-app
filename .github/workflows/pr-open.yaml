@@ -47,7 +47,7 @@ jobs:
         location: ${{ env.GKE_ZONE }}
     
     - name: Replace image in config
-      uses: datamonsters/replace-action
+      uses: datamonsters/replace-action@master
       with:
         files: 'preview_manifest/deployment.yaml'
         replacements: '$IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}'
