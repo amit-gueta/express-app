@@ -30,4 +30,4 @@ spec:
     spec:
       containers:
       - name: express-server-preview
-        image: guetaamit/app:v4
+        image: $IMAGE
