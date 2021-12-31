@@ -1,4 +1,4 @@
-name: pr
+name: pr-open
 on:
   pull_request:
     branches:
@@ -45,6 +45,13 @@ jobs:
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
+    
+    - name: Replace image in config
+      uses: datamonsters/replace-action@master
+      with:
+        files: 'preview_manifest/deployment.yaml'
+        replacements: '$IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}'
+
 
     - name: Deploy preview
       run: |
@@ -62,10 +69,17 @@ jobs:
 
         # Deploy
         cd preview_manifest
-        ls
+        # grep -rl 'express-server-preview' . | xargs sed -i '' 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g'
+        sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' deployment.yaml
+        sed -i 's/express-server-preview/express-server-preview-${{ github.event.pull_request.number }}/g' ingress.yaml
+        cat deployment.yaml
+        # sleep 3
+        # sed -i -e 's/\(image: \)\(.*\)/\1${{ secrets.DOCKERHUB_USERNAME }}/preview:pr-${{ github.event.pull_request.number }}/' deployment.yaml
+        # cat deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f ingress.yaml
-        # kubectl rollout status deployment devops-toolkit
-    - name: Test
-      run: |
-        echo "I was to lazy to write tests"
+
+    - name: curl Test
+      uses: wei/curl@v1
+      with:
+        args: -X GET express-server-preview-${{ github.event.pull_request.number }}.34.105.179.16.nip.io
