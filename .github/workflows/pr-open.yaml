@@ -78,7 +78,8 @@ jobs:
         # cat deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f ingress.yaml
-        # kubectl rollout status deployment devops-toolkit
-    - name: Test
-      run: |
-        echo "I was to lazy to write tests"
+
+    - name: curl Test
+      uses: wei/curl@v1
+      with:
+        args: -X GET express-server-preview-${{ github.event.pull_request.number }}.34.105.179.16.nip.io
