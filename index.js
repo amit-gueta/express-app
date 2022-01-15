@@ -2,19 +2,19 @@ const express = require('express');
 const app = express();
 
 app.get('/', function (req, res) {
-  res.send('Bye! World!test argo');
+  res.send('main page');
 })
 
 app.get('/amit', function (req, res) {
-    res.send('Hello, World!!dfff!! test argo');
+    res.send('amit end point');
   })
 
 app.get('/gueta', function (req, res) {
-  res.send('another test of argo!!!ffdfddf!!');
+  res.send('gueta end point');
 })
 
 app.get('/amosGueta', function (req, res) {
-  res.send('new endpoint!');
+  res.send('new endpoint! amosGueta');
 })
 
 app.listen(3000, function () {
