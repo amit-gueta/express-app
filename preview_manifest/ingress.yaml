@@ -2,11 +2,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: express-server-preview.34.105.179.16.nip.io
+  name: express-server-preview.35.238.155.224.nip.io
 spec:
   ingressClassName: nginx
   rules:
-  - host: express-server-preview.34.105.179.16.nip.io
+  - host: express-server-preview.35.238.155.224.nip.io
     http:
       paths:
       - backend:
